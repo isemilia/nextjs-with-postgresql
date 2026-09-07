@@ -2,6 +2,7 @@ import { User, UserRole } from "../schemas/user";
 import * as z from 'zod';
 import { cookies } from "next/headers";
 import { db } from "../lib/db";
+import { redirect } from "next/navigation";
 // import crypto from "crypto";
 
 export const sessionSchema = z.object({
@@ -40,6 +41,18 @@ export const createUserSession = async (user: User) => {
 
     const session = (res.rows[0] as unknown as { id: string, expires_at: string });
     await setSessionCookie(session)
+}
+
+export const removeUserSession = async () => {
+    const cookieStore = await cookies();
+    const sessionId = cookieStore.get(COOKIE_SESSION_KEY)?.value
+
+    if (!sessionId) {
+        return
+    }
+
+    await db.query(`DELETE FROM sessions WHERE id = $1`, [sessionId]);
+    cookieStore.delete(COOKIE_SESSION_KEY);
 }
 
 export const getUserSession = async () => {

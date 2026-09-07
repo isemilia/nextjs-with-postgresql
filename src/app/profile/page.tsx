@@ -1,9 +1,11 @@
 'use client';
 
 import { Button } from '@/shadcn/components/ui/button';
+import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 
 const Page = () => {
+  const router = useRouter();
   const [me, setMe] = useState<{
     name: string;
     email: string;
@@ -21,6 +23,11 @@ const Page = () => {
     getMe();
   }, []);
 
+  const handleLogout = async () => {
+    await fetch('/api/auth/logout', { method: 'POST' });
+    router.push('/sign-in');
+  };
+
   return (
     <div className="p-40">
       Profile
@@ -31,7 +38,7 @@ const Page = () => {
             <div>Name: {me.name}</div>
             <div>Email: {me.email}</div>
           </div>
-          <Button>Log out</Button>
+          <Button onClick={handleLogout}>Log out</Button>
         </div>
       ) : (
         <div>No data available</div>
