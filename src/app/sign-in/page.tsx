@@ -1,15 +1,61 @@
+'use client';
+
 import { Button } from '@/shadcn/components/ui/button';
 import { Input } from '@/shadcn/components/ui/input';
+import { signInSchema, signUpSchema } from '@/shared/schemas/auth';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { useRouter } from 'next/navigation';
+import { Controller, useForm } from 'react-hook-form';
+import * as z from 'zod';
 
 const Page = () => {
+  const router = useRouter();
+  const form = useForm<z.infer<typeof signInSchema>>({
+    resolver: zodResolver(signInSchema),
+  });
+
+  const handleSubmit = async (formValues: z.infer<typeof signInSchema>) => {
+    try {
+      const res = await fetch('/api/auth/sign-in', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formValues),
+      });
+
+      const data = await res.json();
+
+      console.log(data);
+
+      router.push('/profile');
+    } catch (e) {
+      console.error(e);
+    }
+  };
+
   return (
     <div className="p-40">
       Sign in
-      <div className="mt-4 space-y-3 w-80">
-        <Input placeholder="Email" />
-        <Input placeholder="Password" />
-        <Button>Submit</Button>
-      </div>
+      <form className="mt-4 space-y-3 w-80">
+        <Controller
+          name="email"
+          control={form.control}
+          render={({ field }) => {
+            return <Input {...field} placeholder="Email" />;
+          }}
+        />
+
+        <Controller
+          name="password"
+          control={form.control}
+          render={({ field }) => {
+            return <Input {...field} placeholder="Password" />;
+          }}
+        />
+
+        <Button onClick={form.handleSubmit(handleSubmit)}>Submit</Button>
+      </form>
     </div>
   );
 };
