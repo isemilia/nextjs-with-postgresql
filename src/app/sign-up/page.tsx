@@ -4,10 +4,12 @@ import { Button } from '@/shadcn/components/ui/button';
 import { Input } from '@/shadcn/components/ui/input';
 import { signUpSchema } from '@/shared/schemas/auth';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { useRouter } from 'next/navigation';
 import { Controller, useForm } from 'react-hook-form';
 import * as z from 'zod';
 
 const Page = () => {
+  const router = useRouter();
   const form = useForm<z.infer<typeof signUpSchema>>({
     resolver: zodResolver(signUpSchema),
   });
@@ -25,6 +27,8 @@ const Page = () => {
       const data = await res.json();
 
       console.log(data);
+
+      router.push('/profile');
     } catch (e) {
       console.error(e);
     }

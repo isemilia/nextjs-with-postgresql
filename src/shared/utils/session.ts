@@ -30,7 +30,7 @@ export const setSessionCookie = async (session: { id: string, expires_at: string
 
 export const createUserSession = async (user: User) => {
     // 7 days from now
-    const expiresAt = new Date(Date.now() + SESSION_EXPIRATION_SECONDS * 1000).toISOString();
+    const expiresAt = new Date(new Date().getTime() + SESSION_EXPIRATION_SECONDS * 1000).toISOString();
 
     const res = await db.query(`
         INSERT INTO sessions (user_id, role, expires_at)
@@ -40,5 +40,22 @@ export const createUserSession = async (user: User) => {
 
     const session = (res.rows[0] as unknown as { id: string, expires_at: string });
     await setSessionCookie(session)
+}
 
+export const getUserSession = async () => {
+    const cookieStore = await cookies();
+    const sessionId = cookieStore.get(COOKIE_SESSION_KEY);
+
+    if (!sessionId) {
+        return null;
+    }
+
+    return getUserSessionById(sessionId.value);
+}
+
+export const getUserSessionById = async (sessionId: string) => {
+    const res = await db.query(`SELECT * FROM sessions WHERE id = $1`, [sessionId]);
+    const rawUser = res.rows[0] as unknown as { user_id: string, id: string };
+
+    return rawUser || null;
 }
