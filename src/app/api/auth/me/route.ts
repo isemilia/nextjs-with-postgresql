@@ -30,4 +30,9 @@ export const GET = async () => {
             );
         }
     }
+
+    return NextResponse.json(
+        { status: 'error', message: 'Session not found' },
+        { status: 401 }
+    );
 }

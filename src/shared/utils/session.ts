@@ -2,8 +2,6 @@ import { User, UserRole } from "../schemas/user";
 import * as z from 'zod';
 import { cookies } from "next/headers";
 import { db } from "../lib/db";
-import { redirect } from "next/navigation";
-// import crypto from "crypto";
 
 export const sessionSchema = z.object({
     id: z.string(),
@@ -51,8 +49,14 @@ export const removeUserSession = async () => {
         return
     }
 
+    await deleteSession(sessionId);
+}
+
+export const deleteSession = async (sessionId: string) => {
+    const cookieStore = await cookies();
     await db.query(`DELETE FROM sessions WHERE id = $1`, [sessionId]);
     cookieStore.delete(COOKIE_SESSION_KEY);
+
 }
 
 export const getUserSession = async () => {
@@ -68,7 +72,19 @@ export const getUserSession = async () => {
 
 export const getUserSessionById = async (sessionId: string) => {
     const res = await db.query(`SELECT * FROM sessions WHERE id = $1`, [sessionId]);
-    const rawUser = res.rows[0] as unknown as { user_id: string, id: string };
+    const session = res.rows[0] as unknown as { user_id: string, id: string, expires_at: string };
 
-    return rawUser || null;
+    if (!session) {
+        return null
+    }
+
+    const expiresAt = new Date(session.expires_at).getTime();
+    const now = new Date().getTime();
+
+    if (expiresAt < now) {
+        await deleteSession(session.id);
+        return null;
+    }
+
+    return session;
 }

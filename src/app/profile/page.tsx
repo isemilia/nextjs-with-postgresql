@@ -15,8 +15,13 @@ const Page = () => {
   useEffect(() => {
     const getMe = async () => {
       const res = await fetch('/api/auth/me', { method: 'GET' });
-      const { data } = await res.json();
 
+      if (!res.ok) {
+        setMe(null);
+        return;
+      }
+
+      const { data } = await res.json();
       setMe(data.user);
     };
 
