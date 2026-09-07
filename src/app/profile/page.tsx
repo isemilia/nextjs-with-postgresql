@@ -17,6 +17,7 @@ const Page = () => {
       const res = await fetch('/api/auth/me', { method: 'GET' });
 
       if (!res.ok) {
+        router.push('/sign-in');
         setMe(null);
         return;
       }
