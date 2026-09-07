@@ -1,6 +1,6 @@
 import { db } from "@/shared/lib/db";
 import { signUpSchema } from "@/shared/schemas/auth";
-import { hashPassword } from "@/shared/utils/password-hasher";
+import { generateSalt, hashPassword } from "@/shared/utils/password-hasher";
 import { NextRequest, NextResponse } from "next/server";
 import * as z from "zod";
 
@@ -16,9 +16,26 @@ export const POST = async (request: NextRequest) => {
         );
     }
 
-    const hashedPassword = await hashPassword(data.password, 'salt');
+    const salt = generateSalt();
+    const hashedPassword = await hashPassword(data.password, salt);
 
-    return NextResponse.json(
-        { status: 'success', message: 'User created successfully', data: { hashedPassword } },
-    );
+    try {
+        const res = await db.query(`
+        INSERT INTO users (name, email, password, salt)
+        VALUES ($1, $2, $3, $4)
+        RETURNING name, email
+    `,
+            [data.name, data.email, hashedPassword, salt]
+        )
+
+        return NextResponse.json(
+            { status: 'success', message: 'User created successfully', data: { user: res.rows[0] } },
+        );
+    } catch (e) {
+        console.error(e);
+
+        return NextResponse.json(
+            { status: 'error', message: 'Could not create user' }, { status: 500 },
+        );
+    }
 }

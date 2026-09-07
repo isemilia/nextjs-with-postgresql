@@ -35,6 +35,14 @@ const Page = () => {
       Sign up
       <form className="mt-4 space-y-3 w-80">
         <Controller
+          name="name"
+          control={form.control}
+          render={({ field }) => {
+            return <Input {...field} placeholder="Name" />;
+          }}
+        />
+
+        <Controller
           name="email"
           control={form.control}
           render={({ field }) => {

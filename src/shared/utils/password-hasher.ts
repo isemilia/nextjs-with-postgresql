@@ -6,7 +6,11 @@ export const hashPassword = (password: string, salt: string) => {
             if (error) {
                 reject()
             }
-            resolve(hashed.toString('hex'))
+            resolve(hashed.toString('hex').normalize())
         })
     })
+}
+
+export const generateSalt = () => {
+    return crypto.randomBytes(16).toString('hex').normalize()
 }
