@@ -6,8 +6,8 @@ const Page = () => {
     <div className="p-40">
       Sign in
       <div className="mt-4 space-y-3 w-80">
-        <Input />
-        <Input />
+        <Input placeholder="Email" />
+        <Input placeholder="Password" />
         <Button>Submit</Button>
       </div>
     </div>
