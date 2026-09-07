@@ -20,7 +20,7 @@ export const GET = async () => {
                 status: 'success',
                 message: 'Fetched user successfully',
                 data: { user }
-            })
+            });
         } catch (e) {
             console.error(e);
 
