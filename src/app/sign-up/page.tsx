@@ -4,7 +4,7 @@ import { Input } from '@/shadcn/components/ui/input';
 const Page = () => {
   return (
     <div className="p-40">
-      Sign in
+      Sign up
       <div className="mt-4 space-y-3 w-80">
         <Input placeholder="Email" />
         <Input placeholder="Password" />
