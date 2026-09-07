@@ -16,10 +16,10 @@ export const POST = async (request: NextRequest) => {
         );
     }
 
-    const salt = generateSalt();
-    const hashedPassword = await hashPassword(data.password, salt);
-
     try {
+        const salt = generateSalt();
+        const hashedPassword = await hashPassword(data.password, salt);
+
         const res = await db.query(`
         INSERT INTO users (name, email, password, salt)
         VALUES ($1, $2, $3, $4)
