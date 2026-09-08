@@ -1,6 +1,6 @@
 export default function Home() {
   return (
-    <main className="p-40">
+    <main>
       <h1 className="text-lg font-semibold">Links</h1>
 
       <nav className="mt-6">
@@ -15,7 +15,10 @@ export default function Home() {
             <a href="/profile">Profile</a>
           </li>
           <li>
-            <a href="/private">Private</a>
+            <a href="/private">Authenticated only</a>
+          </li>
+          <li>
+            <a href="/admin">Admin role only</a>
           </li>
         </ul>
       </nav>

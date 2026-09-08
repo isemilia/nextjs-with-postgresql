@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import { Geist, Geist_Mono, Inter } from 'next/font/google';
 import './globals.css';
 import { cn } from '@/shadcn/lib/utils';
+import Link from 'next/link';
 
 const inter = Inter({ subsets: ['latin'], variable: '--font-sans' });
 
@@ -32,7 +33,14 @@ export default function RootLayout({ children }: LayoutProps<'/'>) {
         'font-sans',
         inter.variable,
       )}>
-      <body className="min-h-full flex flex-col">{children}</body>
+      <body className="min-h-full">
+        <div className="p-40 space-y-6">
+          <Link href="/" className="block py-3 border-b border-gray-200">
+            Home
+          </Link>
+          {children}
+        </div>
+      </body>
     </html>
   );
 }
