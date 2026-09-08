@@ -10,6 +10,7 @@ const Page = () => {
     name: string;
     email: string;
     id: string;
+    role: string;
   } | null>(null);
 
   useEffect(() => {
@@ -17,6 +18,7 @@ const Page = () => {
       const res = await fetch('/api/auth/me', { method: 'GET' });
 
       if (!res.ok) {
+        router.push('/sign-in');
         setMe(null);
         return;
       }
@@ -34,7 +36,7 @@ const Page = () => {
   };
 
   return (
-    <div className="p-40">
+    <div>
       Profile
       {me ? (
         <div className="mt-4 space-y-4 w-80">
@@ -42,6 +44,7 @@ const Page = () => {
             <div>ID: {me.id}</div>
             <div>Name: {me.name}</div>
             <div>Email: {me.email}</div>
+            <div>Role: {me.role}</div>
           </div>
           <Button onClick={handleLogout}>Log out</Button>
         </div>

@@ -35,7 +35,7 @@ const Page = () => {
   };
 
   return (
-    <div className="p-40">
+    <div>
       Sign up
       <form className="mt-4 space-y-3 w-80">
         <Controller

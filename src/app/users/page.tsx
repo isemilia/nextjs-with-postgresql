@@ -28,7 +28,7 @@ const Page = () => {
   };
 
   return (
-    <div className="p-40">
+    <div>
       <h2>Create a user</h2>
       <div className="grid grid-cols-[auto_1fr] gap-20">
         <div className="mt-4 space-y-3 w-80">

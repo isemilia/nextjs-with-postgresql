@@ -72,7 +72,7 @@ export const getUserSession = async () => {
 
 export const getUserSessionById = async (sessionId: string) => {
     const res = await db.query(`SELECT * FROM sessions WHERE id = $1`, [sessionId]);
-    const session = res.rows[0] as unknown as { user_id: string, id: string, expires_at: string };
+    const session = res.rows[0] as unknown as { user_id: string, id: string, expires_at: string, role: UserRole };
 
     if (!session) {
         return null
