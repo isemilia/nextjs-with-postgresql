@@ -22,7 +22,10 @@ export const setSessionCookie = async (session: { id: string, expires_at: string
         session.id,
         {
             expires: new Date(session.expires_at),
-            sameSite: 'lax'
+            sameSite: 'lax',
+            httpOnly: true,
+            secure: process.env.NODE_ENV === 'production',
+            path: '/',
         }
     );
 }
